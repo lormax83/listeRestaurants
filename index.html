@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script src="lib/vue.min.js"></script>
+    <script src="lib/lodash.min.js"></script>
+
+    <script src="js/script.js"></script>
+
+    <link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,500,700,400italic|Material+Icons">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/vue-material.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material@beta/dist/theme/default.css">
+    <title>Gestionnaire restaurants VueJS</title>
+</head>
+
+<body>
+
+<div id="app">
+
+<template>
+
+
+
+
+ <md-card>
+      <md-card-header>
+        <md-card-header-text>
+          			<div class="action">
+<div class="md-title"><h1 style="text-align:center;font-size:45px;font-family:sans-serif;color:#655252;"><md-icon class="md-size-5x fa fa-home"></md-icon>Gestion des restaurants</h1></div>
+			</div>
+     
+	 </md-card-header-text>
+		
+		<md-card-content>
+			<div class="action">
+			  <h1 class="titre"><md-icon class="fa fa-plus"></md-icon>Ajouter un restaurant : </h1>		
+				<form v-on:submit="ajouterRestaurant">
+					<label>
+					   <input  class="champ" placeholder="Nom :" type="text" name="nom" required v-model="nomAdd">
+					</label>
+					<label>
+						<input  class="champ" placeholder="Cuisine :" type="text" name="cuisine" required v-model="cuisineAdd">
+					</label>
+					<button  class="bouton">Ajouter</button>
+				</form>
+			</div>
+			<div class="action">
+				<p>	    
+					<h1 class="titre"><md-icon class="fa fa-bars"></md-icon>Liste des restaurants : </h1>	
+					<p style="font-size: 21px;font-family: sans-serif;">Nombre de restaurants : {{nbRestaurants}}, nb pages = {{nbPagesDeResultats}}</h1>            
+						<div>
+							<label style="font-size: 21px;font-family: sans-serif;">
+								Rechercher par nom : 
+								<input type="text" v-on:input="getRestaurantsFromServer()" 
+									   v-model="nomRecherche">
+							</label>
+						</div>
+					</p> 
+			</div>
+	<div class="action">
+
+        <form id="formulaireModification"  v-on:submit="modifierRestaurant" style="display:none">
+		    <md-card class="md-layout-item md-size-50 md-small-size-100">
+				<md-card-header>
+					<div class="md-title"><h1 class="titre"><md-icon class="fa fa-plus"></md-icon>Modification d'un restaurant :</h1></div>
+				</md-card-header>
+				<md-card-content>
+				<div class="md-layout-item md-small-size-100">
+                <label>
+                    Id: <input type="text" name="_id" id="idModification"
+                    value="" required placeholder="Id du restaurant à modifier" readonly>
+                </label>
+                <p></p>
+                <label>
+                    Nom: <input type="text" name="nom" id="nomModification"
+                    value="" required placeholder="Nom du restaurant">
+                </label>
+                <p></p>
+                <label>
+                    Cuisine: <input type="text" name="cuisine" id="cuisineModification"
+                    value="" required placeholder="Cuisine française">
+                </label>
+                <p></p>
+				</div>
+				<md-card-content>
+				<md-card-actions>
+                <button class="bouton">Modifier ce restaurant</button>
+				</md-card-actions>
+			</md-card>
+        </form>
+	</div>
+	
+    <table>
+        <tr>
+            <th>Nom</th>
+            <th>Cuisine </th>
+            <th>Action </th>
+        </tr>
+        <tbody>
+            <tr v-for="r,index in restaurants" 
+                v-bind:style="{backgroundColor:getColor(index)}">
+                    <td>{{r.name}}</td>
+                    <td>{{r.cuisine}}</td>
+                    <td><button class="boutonMod" v-on:click="formModifierRestaurant(index)">Modifier</button>
+                <button class="boutonSupp" v-on:click="supprimerRestaurant(index)">Supriprimer</button></td>
+            </tr>
+        </tbody>
+    </table>
+		<div class="action">
+<p> 
+        <input type="range" v-on:input="getRestaurantsFromServer()" 
+               value=10 min=2 max =100 
+               v-model="pagesize"
+        > : {{this.pagesize}}
+    </p>
+	<button class="bouton2" v-on:click="pagePrecedente()" v-bind:class="{inactif:(page==0)}">Page Precedente</button>
+    <button class="bouton2" v-on:click="pageSuivante()" v-bind:class="{inactif:(page == (nbPagesDeResultats-1))}">Page Suivante</button>
+	<button class="bouton2" v-on:click="Dernierepage()">Derniere Page</button>
+	<button class="bouton2" v-on:click="Premierepage()">Premiere page</button>
+	<div style="margin-top:20px;font-size:15px;text-align:center;font-family: sans-serif;">Page : {{page}}</div>
+
+		</div>
+        </md-card-content>
+
+	</md-card-header>
+</md-card>
+
+</template>
+
+</div>
+</body>
+
+</html>
